@@ -18,11 +18,15 @@
     "scripts": ["js/background.js"],
     "persistent": true
   },
-  "permissions": ["https://*/*"],
+  "permissions": [
+    "https://*/*",
+    "https://www.youtube.com/*",
+    "https://api.genius.com/*"
+  ],
   "content_security_policy": "default-src 'self'; connect-src *; script-src-elem * ; style-src 'self' data: 'unsafe-inline'; img-src *",
   "content_scripts": [
     {
-      "matches": ["https://*/*"],
+      "matches": ["https://www.youtube.com/*"],
       "js": ["js/content.js"]
     }
   ]
