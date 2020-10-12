@@ -1,6 +1,6 @@
 import { $x } from "./xpath";
 
-export function getVideoTitle() {
+function getVideoTitle() {
   const res = $x(
     '//*[@id="container"]/h1/yt-formatted-string/text()',
     document
@@ -8,4 +8,20 @@ export function getVideoTitle() {
   if (!res) throw Error("no video title found!");
 
   return res as string;
+}
+
+export async function waitForVideo() {
+  const maxTries = 16;
+  return new Promise((resolve, reject) => {
+    let count = 0;
+    const interval = setInterval(() => {
+      try {
+        const title = getVideoTitle();
+        clearInterval(interval);
+        resolve(title);
+      } catch (err) {}
+      count += 1;
+      if (count > maxTries) reject("Could not find video title");
+    }, 500);
+  });
 }

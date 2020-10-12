@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "axios": "^0.20.0",
+    "dotenv-webpack": "^3.0.0",
     "jsdom": "^16.4.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",

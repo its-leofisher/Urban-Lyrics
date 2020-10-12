@@ -19,6 +19,7 @@
     "persistent": true
   },
   "permissions": [
+    "http://*/*",
     "https://*/*",
     "https://www.youtube.com/*",
     "https://api.genius.com/*"

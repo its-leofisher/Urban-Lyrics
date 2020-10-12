@@ -1,3 +1,3 @@
-import { subscribeToGeniusFindUrl } from "../util/genius";
+import { subscribeToGeniusFetchLyrics } from "../util/genius";
 
-subscribeToGeniusFindUrl();
+subscribeToGeniusFetchLyrics();
