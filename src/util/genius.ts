@@ -1,13 +1,8 @@
 import axios from "axios";
+import { LyricResult } from "./types";
 
 // async/await -- waiter at multiple tables
 // multithreading -- multiple waiters
-
-type LyricResult = {
-  lyrics: string;
-  songTitle: string;
-  artist: string;
-};
 
 // IO bound application -- read/write to files a lot (or do a lot of http requests)
 // CPU bound -- lots of computation
