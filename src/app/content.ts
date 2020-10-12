@@ -5,12 +5,12 @@ import { waitForVideo } from "../util/youtube";
 async function run() {
   const title = await waitForVideo();
   const titleKey = `title-${title}`;
-  const curData = new Promise((resolve) =>
+  const curData = await new Promise((resolve) =>
     chrome.storage.local.get([titleKey], (obj) => {
       resolve(obj?.[titleKey]);
     })
   );
-  if (curData) return;
+  if (curData) return; // if we already have data for this song then we don't need to make a request
   chrome.storage.local.set({
     [titleKey]: {
       loading: true,
@@ -18,7 +18,6 @@ async function run() {
     },
   });
   const data = await fetchLyricsBackground(title);
-
   chrome.storage.local.set({
     [titleKey]: { data, lastUpdated: new Date().getTime() },
   });

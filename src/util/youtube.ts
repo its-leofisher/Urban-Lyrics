@@ -12,7 +12,7 @@ function getVideoTitle() {
 
 export async function waitForVideo() {
   const maxTries = 16;
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     let count = 0;
     const interval = setInterval(() => {
       try {
