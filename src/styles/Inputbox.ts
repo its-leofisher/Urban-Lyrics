@@ -3,9 +3,9 @@ import { geniusYellow } from "./Containers";
 
 export const MyInputbox = styled.input.attrs((props) => ({
   type: "text",
-  defaultValue: props.defaultValue,
+  placeholder: props.placeholder,
 }))`
   background-color: ${geniusYellow};
-  margin-left: 5;
+  margin-left: 5px;
   display: "block";
 `;

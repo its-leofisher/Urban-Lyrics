@@ -11,6 +11,9 @@ import {
   SongNameContainer,
   LyricsContainer,
 } from "../styles/Containers";
+import { Loading } from "./loading";
+import { DefineWordInput } from "./DefineWordInput";
+import { SongInput } from "./SongInput";
 
 type State = LyricCacheObj | { error: string } | false;
 
@@ -40,13 +43,12 @@ export const Overlay: FC = () => {
         setData({ error: err.toString() });
       }
     }, 1500);
-    () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
-  if (!data) return <div>Loading</div>;
+  if (!data) return <Loading />;
 
-  if (isLoading(data))
-    return <div>Loading as of {new Date(data.lastUpdated).toTimeString()}</div>;
+  if (isLoading(data)) return <Loading />;
 
   if (isErrorState(data)) return <div>Error: {data.error}</div>;
 
@@ -66,8 +68,8 @@ export const Overlay: FC = () => {
         </LyricsContainer>
       </MainContainer>
       <br />
-      <MyInputbox defaultValue="Search a word..."></MyInputbox>
-      <MyInputbox defaultValue="Search a song..."></MyInputbox>
+      <DefineWordInput />
+      <SongInput />
     </Container>
   );
 };

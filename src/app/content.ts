@@ -1,4 +1,3 @@
-import "../ui/overlay";
 import { fetchLyricsBackground } from "../util/genius";
 import { waitForVideo, subscribeToGetVideoContent } from "../util/youtube";
 
@@ -26,4 +25,5 @@ async function run() {
   });
 }
 
-run();
+// runs in loop, every 1.5s
+setInterval(run, 1500);
