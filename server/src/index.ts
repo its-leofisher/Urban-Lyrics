@@ -3,7 +3,9 @@ import * as puppeteer from "puppeteer";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 
+// create the server object
 const app = express();
+// .use() will run the given middleware on every request
 app.use(cors());
 app.use(bodyParser.json()); // parse body from string to json
 
@@ -47,47 +49,63 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
   // 3. grab the lyrics from the newly loaded page
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
-  let skippedResources = blockedUrls;
-  page.on("request", (request) => {
-    if (
-      !["document", "script", "xhr", "other"].includes(request.resourceType())
-    ) {
-      request.abort();
-      return;
-    }
-    const requestUrl = (request as any)._url.split("?")[0].split("#")[0];
-    if (
-      skippedResources.some((resource) => requestUrl.indexOf(resource) !== -1)
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
+  try {
+    await page.setRequestInterception(true);
+    let skippedResources = blockedUrls;
+    // listen for the request event
+    page.on("request", (request) => {
+      if (
+        !["document", "script", "xhr", "other"].includes(request.resourceType())
+      ) {
+        request.abort();
+        return;
+      }
+      // mywebsite.com/page?q=google.com => mywebsite.com
+      // mywebsite.com/page# => mywebsite.com
+      const requestUrl: string = (request as any)._url
+        .split("?")[0]
+        .split("#")[0];
+      // requestUrl = mywebsite.com/page
+      // resource = mywebsite.com
+      if (
+        skippedResources.some((resource) => requestUrl.indexOf(resource) !== -1)
+      ) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
 
-  await page.goto(encodeURI(`https://genius.com/search?q=${title}`));
+    await page.goto(encodeURI(`https://genius.com/search?q=${title}`));
 
-  const firstSong = await page.waitForXPath('//*[name()="mini-song-card"]//a', {
-    timeout: 15000,
-  });
-  await firstSong.click();
-  const lyrics = await (
-    await page.waitForXPath("//*[contains(@class,'Lyrics__Root')]|//section")
-  ).evaluate((p: any) => p.innerText);
-  const songTitle = await (
-    await page.waitForXPath("//h1[contains(@class, 'itle')]")
-  ).evaluate((p: any) => p.innerText);
-  const artist = await (
-    await page.waitForXPath(
-      "//a[contains(@href,'https://genius.com/artists/') and contains(@class, 'rtist')]"
+    const firstSong = await page.waitForXPath(
+      '//*[name()="mini-song-card"]//a',
+      {
+        timeout: 15000,
+      }
+    );
+    await firstSong.click();
+    const lyrics = await (
+      await page.waitForXPath("//*[contains(@class,'Lyrics__Root')]|//section")
+    ).evaluate((p: any) => p.innerText);
+    const songTitle = await (
+      await page.waitForXPath("//h1[contains(@class, 'itle')]")
+    ).evaluate((p: any) => p.innerText);
+    const artist = await (
+      await page.waitForXPath(
+        "//a[contains(@href,'https://genius.com/artists/') and contains(@class, 'rtist')]"
+      )
     )
-  ).evaluate((p: any) => p.innerText);
-  return {
-    lyrics,
-    songTitle,
-    artist,
-  };
+      // runs the function on the element IN THE PUPPETEER BROWSER (not node.js)
+      .evaluate((p: any) => p.innerText);
+    return {
+      lyrics,
+      songTitle,
+      artist,
+    };
+  } finally {
+    browser.close();
+  }
 }
 
 const blockedUrls = [
@@ -127,4 +145,8 @@ const blockedUrls = [
   "gumgum.com",
 ];
 
-app.listen(8000, () => console.log("Server started on port 8000"));
+// say we run this from this ip address: 333.333.3.3
+// then it will be accessible from http://333.333.3.3:8000
+// say we have a website domain on 333.333.3.3 called leonswebsite.com with port redirection 8000 -> 80
+// then it will be accessible from http://leonswebsite.com
+app.listen(8000, () => console.log("Server started on http://localhost:8000"));

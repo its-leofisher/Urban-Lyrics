@@ -2,21 +2,24 @@ import * as React from "react";
 import { FC, useState, useEffect } from "react";
 import { LyricCacheObj, isLoading, LoadingState } from "../util/types";
 import { getVideoContent } from "../util/youtube";
-import { MyInputbox } from "../styles/Inputbox";
-import { GlobalStyle } from "../styles/Global";
-import {
-  Container,
-  ArtistNameContainer,
-  MainContainer,
-  SongNameContainer,
-  LyricsContainer,
-} from "../styles/Containers";
-import { Loading } from "./loading";
-import { DefineWordInput } from "./DefineWordInput";
 import { SongInput } from "./SongInput";
+import { DefineWordInput } from "./DefineWordInput";
+import "./popup.css";
+import { Error } from "./components/Error";
+import { Loading, Container } from "./components/Loading";
+import {
+  MainContainer,
+  SongTitle,
+  ArtistName,
+  LyricBar,
+  LineBreak,
+  LookupContainer,
+  Input,
+} from "./components/Lyricview";
 
 type State = LyricCacheObj | { error: string } | false;
 
+// fetches the title (and then lyrics) from storage
 async function getData(): Promise<LyricCacheObj> {
   const title = await getVideoContent();
   const titleKey = `title-${title}`;
@@ -34,42 +37,54 @@ function isErrorState(s: State): s is { error: string } {
 
 export const Overlay: FC = () => {
   const [data, setData] = useState<State>(false);
+  // TODO: setTitle needs to be called from SongInput
+  const [curTitle, setTitle] = useState<string | null>(null);
 
+  // when the popup is opened, start the interval
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
+        // TODO: if curTitle is non-null, get the data based on curTitle instead (new helper function needed)
         setData(await getData());
       } catch (err) {
+        // some kind of error getting the title or loading from storage
         setData({ error: err.toString() });
       }
-    }, 1500);
+    }, 500);
     return () => clearInterval(interval);
-  }, []);
+  }, [curTitle]);
 
+  // case 1: the content script hasn't even set the state to loading yet
   if (!data) return <Loading />;
 
+  // case 2: it's in loading state
   if (isLoading(data)) return <Loading />;
 
-  if (isErrorState(data)) return <div>Error: {data.error}</div>;
+  // case 3: there was some kind of error fetching the title or lyrics
+  if (isErrorState(data)) return <Error />;
 
+  // case 4: all's good
   const lyricsByLine = data.lyrics.split(/\n/);
 
   return (
     <Container>
-      <GlobalStyle />
       <MainContainer>
-        <SongNameContainer>{data.songTitle}</SongNameContainer>
-        <ArtistNameContainer>{data.artist}</ArtistNameContainer>
-        <br />
-        <LyricsContainer>
-          {lyricsByLine.map((line, idx) =>
-            !line.trim() ? <br key={idx} /> : <p key={idx}>{line}</p>
-          )}
-        </LyricsContainer>
+        <SongTitle>{data.songTitle}</SongTitle>
+        <ArtistName>{data.artist}</ArtistName>
+        {lyricsByLine.map((line, idx) =>
+          line.trim() ? (
+            <LyricBar key={idx}>{line}</LyricBar>
+          ) : (
+            <LineBreak key={idx} />
+          )
+        )}
       </MainContainer>
-      <br />
-      <DefineWordInput />
-      <SongInput />
+      <LookupContainer>
+        {/* //<DefineWordInput /> */}
+        {/* <SongInput setTitle={setTitle} /> */}
+        <Input placeholder="Urban dictionary lookup" />
+        <Input placeholder="Song lookup" />
+      </LookupContainer>
     </Container>
   );
 };

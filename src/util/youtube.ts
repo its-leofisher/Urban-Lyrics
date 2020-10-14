@@ -10,11 +10,14 @@ function getVideoTitle() {
   return res as string;
 }
 
+// gets called from popup script; popup script doesn't have access to the title
+// so it needs to send a message to content script to get it
 export async function getVideoContent(): Promise<string> {
-  const tabs = await new Promise((resolve) =>
+  const tabs: chrome.tabs.Tab[] = await new Promise((resolve) =>
     chrome.tabs.query({ active: true, currentWindow: true }, resolve)
   );
   const title = await new Promise<string>((resolve, reject) =>
+    // sends message to content script in order to get the title of the video
     chrome.tabs.sendMessage(tabs[0].id, "getTitle", (res) => {
       if (!res.error) resolve(res.title);
       else reject(res.error);
@@ -23,6 +26,7 @@ export async function getVideoContent(): Promise<string> {
   return title;
 }
 
+// run in content script, returns the title
 export function subscribeToGetVideoContent() {
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg === "getTitle") {
@@ -36,18 +40,26 @@ export function subscribeToGetVideoContent() {
   });
 }
 
+// this is called in content script
+// the page might not have loaded yet, so we need to keep checking for a video title
 export async function waitForVideo() {
   const maxTries = 16;
   return new Promise<string>((resolve, reject) => {
     let count = 0;
+    // setInterval(cb, x) runs cb every x milliseconds
     const interval = setInterval(() => {
       try {
         const title = getVideoTitle();
         clearInterval(interval);
         resolve(title);
+        return;
       } catch (err) {}
+
       count += 1;
-      if (count > maxTries) reject("Could not find video title");
+      if (count > maxTries) {
+        clearInterval(interval);
+        reject("Could not find video title");
+      }
     }, 500);
   });
 }
