@@ -84,6 +84,6 @@ export const LookupContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-bottom: -8px;
 `;
