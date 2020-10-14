@@ -1,14 +1,26 @@
 import { $x } from "./xpath";
 
+function cleanString(input: string): string {
+  let output = "";
+  for (var i = 0; i < input.length; ++i) {
+    if (input.charCodeAt(i) <= 127) {
+      output += input.charAt(i);
+    } else {
+      break;
+    }
+  }
+  return output;
+}
+
 function getVideoTitle() {
   const res = $x(
     '//*[@id="container"]/h1/yt-formatted-string/text()',
     document
   )[0].nodeValue; //why nodeValue here?
-  console.log(res);
+  //console.log(cleanString(res));
   if (!res) throw Error("no video title found!");
 
-  return res as string;
+  return cleanString(res);
 }
 
 // gets called from popup script; popup script doesn't have access to the title
