@@ -52,7 +52,13 @@ export const Overlay: FC = () => {
   if (isLoading(data)) return <Loading />;
 
   // case 3: there was some kind of error fetching the title or lyrics
-  if (isErrorState(data)) return <Error />;
+  if (isErrorState(data))
+    return (
+      <Error>
+        <DefineWordInput />
+        <SongInput setTitle={setTitle} />
+      </Error>
+    );
 
   // case 4: all's good
   const lyricsByLine = data.lyrics.split(/\n/);

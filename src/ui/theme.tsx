@@ -26,9 +26,17 @@ export const Input = styled.input`
   background-color: ${geniusYellow};
   width: 100%;
   border-style: 0.25px solid black;
-  border-radius: 10px;
+  border-radius: 0px;
   padding: 0.5em;
   margin: 0.125em;
   font-family: "Montserrat";
   box-sizing: border-box;
+  background-color: black;
+  color: ${geniusYellow};
+  font-style: normal;
+
+  &::placeholder {
+    color: ${geniusYellow};
+    font-style: normal;
+  }
 `;

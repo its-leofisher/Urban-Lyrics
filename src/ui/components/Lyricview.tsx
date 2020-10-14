@@ -78,10 +78,12 @@ const ArtistName = styled.h4`
   font-size: 0.7em;
 `;
 
-const LookupContainer = styled.div`
+export const LookupContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 5px;
+  margin-bottom: -8px;
 `;
