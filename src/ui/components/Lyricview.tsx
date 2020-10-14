@@ -1,15 +1,53 @@
 import * as React from "react";
+import { FC } from "react";
 import styled from "styled-components";
-import { Container, geniusYellow } from "./Loading";
+import { geniusYellow } from "../theme";
 
-export const LyricBar = styled.p`
+type LyricViewProps = {
+  lyrics: string[];
+  songTitle: string;
+  artist: string;
+};
+
+export const LyricView: FC<LyricViewProps> = (props) => {
+  const { lyrics, songTitle, artist, children } = props;
+  return (
+    <LyricContainer>
+      <MainContainer>
+        <SongTitle>{songTitle}</SongTitle>
+        <ArtistName>{artist}</ArtistName>
+        {lyrics.map((line, idx) =>
+          line.trim() ? (
+            <LyricBar key={idx}>{line}</LyricBar>
+          ) : (
+            <LineBreak key={idx} />
+          )
+        )}
+      </MainContainer>
+      <LookupContainer>{children}</LookupContainer>
+    </LyricContainer>
+  );
+};
+
+const LyricContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${geniusYellow};
+  height: 600px;
+  box-sizing: border-box;
+  padding: 0.5em;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LyricBar = styled.p`
   margin: 0 0 1px 0;
-  padding-right: 20px; /*Test this*/
+  padding-right: 20px;
   font-family: "Montserrat";
   font-size: 0.6em;
 `;
 
-export const LineBreak = styled.br`
+const LineBreak = styled.br`
   margin: 0;
   padding: 0;
   padding-right: 0px;
@@ -17,19 +55,22 @@ export const LineBreak = styled.br`
   line-height: 0.3em;
 `;
 
-export const MainContainer = styled.div`
+const MainContainer = styled.div`
   overflow-y: auto;
-  height: 90%;
+  margin-right: -0.5em;
+  margin-top: -0.5em;
+  padding-right: 0.5em;
+  padding-top: 0.5em;
 `;
 
-export const SongTitle = styled.h2`
+const SongTitle = styled.h2`
   padding: 0;
   margin: 0;
   font-family: "Montserrat";
   font-size: 1em;
 `;
 
-export const ArtistName = styled.h4`
+const ArtistName = styled.h4`
   padding: 0;
   margin: 0 0 0.5em 0;
   font-family: "Montserrat";
@@ -37,22 +78,10 @@ export const ArtistName = styled.h4`
   font-size: 0.7em;
 `;
 
-export const LookupContainer = styled.div`
+const LookupContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-`;
-
-export const Input = styled.input`
-  outline: none;
-  background-color: ${geniusYellow};
-  width: 100%;
-  border-style: 0.25px solid black;
-  border-radius: 10px;
-  padding: 0.5em;
-  margin: 0.125em;
-  font-family: "Montserrat";
-  box-sizing: border-box;
 `;

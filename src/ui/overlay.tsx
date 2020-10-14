@@ -2,20 +2,11 @@ import * as React from "react";
 import { FC, useState, useEffect } from "react";
 import { LyricCacheObj, isLoading, LoadingState } from "../util/types";
 import { getVideoContent } from "../util/youtube";
-import { SongInput } from "./SongInput";
-import { DefineWordInput } from "./DefineWordInput";
-import "./popup.css";
 import { Error } from "./components/Error";
-import { Loading, Container } from "./components/Loading";
-import {
-  MainContainer,
-  SongTitle,
-  ArtistName,
-  LyricBar,
-  LineBreak,
-  LookupContainer,
-  Input,
-} from "./components/Lyricview";
+import { Loading } from "./components/Loading";
+import { LyricView } from "./components/LyricView";
+import { SongInput } from "./components/SongInput";
+import { DefineWordInput } from "./components/DefineWordInput";
 
 type State = LyricCacheObj | { error: string } | false;
 
@@ -67,24 +58,13 @@ export const Overlay: FC = () => {
   const lyricsByLine = data.lyrics.split(/\n/);
 
   return (
-    <Container>
-      <MainContainer>
-        <SongTitle>{data.songTitle}</SongTitle>
-        <ArtistName>{data.artist}</ArtistName>
-        {lyricsByLine.map((line, idx) =>
-          line.trim() ? (
-            <LyricBar key={idx}>{line}</LyricBar>
-          ) : (
-            <LineBreak key={idx} />
-          )
-        )}
-      </MainContainer>
-      <LookupContainer>
-        {/* //<DefineWordInput /> */}
-        {/* <SongInput setTitle={setTitle} /> */}
-        <Input placeholder="Urban dictionary lookup" />
-        <Input placeholder="Song lookup" />
-      </LookupContainer>
-    </Container>
+    <LyricView
+      lyrics={lyricsByLine}
+      songTitle={data.songTitle}
+      artist={data.artist}
+    >
+      <DefineWordInput />
+      <SongInput setTitle={setTitle} />
+    </LyricView>
   );
 };

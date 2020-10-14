@@ -1,17 +1,13 @@
 import * as React from "react";
-import styled from "styled-components";
-import { fetchLyricsBackground } from "../util/genius";
-import { waitForVideo } from "../util/youtube";
-import { geniusYellow } from "../styles/Containers";
+import { fetchLyricsBackground } from "../../util/genius";
+import { Input } from "../theme";
+import { FC } from "react";
 
-export const MyInputbox = styled.input.attrs((props) => ({
-  ref: props.ref,
-}))`
-  background-color: ${geniusYellow};
-  display: "block";
-`;
+type SongInputProps = {
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+};
 
-export const SongInput = ({ setTitle }) => {
+export const SongInput: FC<SongInputProps> = ({ setTitle }) => {
   const inputbox = React.useRef<HTMLInputElement | undefined>();
 
   async function runWithInput() {
@@ -45,7 +41,7 @@ export const SongInput = ({ setTitle }) => {
   }
 
   return (
-    <MyInputbox
+    <Input
       type="text"
       placeholder="Song lookup"
       ref={inputbox}
