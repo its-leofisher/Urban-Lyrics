@@ -44,8 +44,8 @@ type LyricResult = {
 };
 
 async function scrapeLyrics(title: string): Promise<LyricResult> {
-  // 1. search genius.com
-  // 2. click on the first song option
+  // 1. search google.com
+  // 2. click on the first link
   // 3. grab the lyrics from the newly loaded page
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -76,10 +76,15 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
       }
     });
 
-    await page.goto(encodeURI(`https://genius.com/search?q=${title}`));
+    //hl = host language
+    await page.goto(
+      encodeURI(
+        `https://google.com/search?hl=en&q=${title} lyrics site:genius.com`
+      )
+    );
 
     const firstSong = await page.waitForXPath(
-      '//*[name()="mini-song-card"]//a',
+      '//*[@id="rso"]/div[1]/div/div[1]/a',
       {
         timeout: 15000,
       }

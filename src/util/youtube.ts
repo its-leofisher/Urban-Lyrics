@@ -4,7 +4,8 @@ function getVideoTitle() {
   const res = $x(
     '//*[@id="container"]/h1/yt-formatted-string/text()',
     document
-  )[0].nodeValue;
+  )[0].nodeValue; //why nodeValue here?
+  console.log(res);
   if (!res) throw Error("no video title found!");
 
   return res as string;

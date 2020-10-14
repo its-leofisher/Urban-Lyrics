@@ -26,6 +26,7 @@ export async function fetchLyrics(title: string): Promise<LyricResult> {
 export function subscribeToGeniusFetchLyrics() {
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message.name === "fetchLyrics" && !!message.title) {
+      // immediately invoked function because we want to await fetchLyrics
       (async function () {
         try {
           const data = await fetchLyrics(message.title);
