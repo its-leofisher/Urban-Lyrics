@@ -41,6 +41,7 @@ type LyricResult = {
   lyrics: string;
   songTitle: string;
   artist: string;
+  geniusUrl: string;
 };
 
 async function scrapeLyrics(title: string): Promise<LyricResult> {
@@ -76,20 +77,24 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
       }
     });
 
-    //hl = host language
-    await page.goto(
-      encodeURI(
-        `https://google.com/search?hl=en&q=${title} lyrics site:genius.com`
-      )
-    );
+    // %20 = space, %26 = &
+    const googleSearchURL = encodeURI(
+      `https://google.com/search?hl=en&q=${title} lyrics site:genius.com`
+    ).replace(/%20&%20/, "%20%26%20");
 
-    const firstSong = await page.waitForXPath(
-      '//*[@id="rso"]/div[1]/div/div[1]/a',
+    //hl = host language
+    await page.goto(googleSearchURL);
+
+    const firstLink = await page.waitForXPath(
+      '//*[@id="rso"]/div[1]/div/div[1]/a', // <-- concerning (test it thoroughly)
       {
-        timeout: 15000,
+        timeout: 10000,
       }
+    ); // <a></a> <-- anchor tag
+    const geniusUrl = await firstLink.evaluate(
+      (a: HTMLAnchorElement) => a.href
     );
-    await firstSong.click();
+    await firstLink.click();
     const lyrics = await (
       await page.waitForXPath("//*[contains(@class,'Lyrics__Root')]|//section")
     ).evaluate((p: any) => p.innerText);
@@ -107,6 +112,7 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
       lyrics,
       songTitle,
       artist,
+      geniusUrl,
     };
   } finally {
     browser.close();

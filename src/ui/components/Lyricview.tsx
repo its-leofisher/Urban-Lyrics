@@ -7,10 +7,11 @@ type LyricViewProps = {
   lyrics: string[];
   songTitle: string;
   artist: string;
+  geniusUrl: string;
 };
 
 export const LyricView: FC<LyricViewProps> = (props) => {
-  const { lyrics, songTitle, artist, children } = props;
+  const { lyrics, songTitle, artist, geniusUrl, children } = props;
   return (
     <LyricContainer>
       <MainContainer>
@@ -23,6 +24,9 @@ export const LyricView: FC<LyricViewProps> = (props) => {
             <LineBreak key={idx} />
           )
         )}
+        <a href={geniusUrl} target="_blank">
+          Click for Genius page
+        </a>
       </MainContainer>
       <LookupContainer>{children}</LookupContainer>
     </LyricContainer>

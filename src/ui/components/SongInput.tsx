@@ -8,13 +8,15 @@ type SongInputProps = {
 };
 
 export const SongInput: FC<SongInputProps> = ({ setTitle }) => {
-  const inputbox = React.useRef<HTMLInputElement | undefined>();
+  const inputbox = React.useRef<HTMLInputElement | null>(null);
 
   async function runWithInput() {
-    const title = inputbox.current.value;
-    if (title === "") return; //do nothing if title is empty
+    const title = inputbox.current?.value;
+    if (!title) return; //do nothing if title is empty
+    setTitle(title);
     inputbox.current.value = ""; // reset inputbox
     const titleKey = `title-${title}`;
+    console.log(title);
     const curData = await new Promise((resolve) =>
       chrome.storage.local.get([titleKey], (obj) => {
         console.log(obj?.[titleKey], obj, titleKey);
@@ -33,7 +35,6 @@ export const SongInput: FC<SongInputProps> = ({ setTitle }) => {
         resolve
       )
     );
-    setTitle(title);
     const data = await fetchLyricsBackground(title);
     chrome.storage.local.set({
       [titleKey]: { ...data, lastUpdated: new Date().getTime() },
@@ -43,7 +44,7 @@ export const SongInput: FC<SongInputProps> = ({ setTitle }) => {
   return (
     <Input
       type="text"
-      placeholder="Song lookup"
+      placeholder="Song Lookup"
       ref={inputbox}
       onKeyPress={(e) => {
         if (e.key === "Enter") runWithInput();

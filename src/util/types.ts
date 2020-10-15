@@ -2,6 +2,7 @@ export type LyricResult = {
   lyrics: string;
   songTitle: string;
   artist: string;
+  geniusUrl: string;
 };
 
 export type LoadingState = {

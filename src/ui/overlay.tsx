@@ -11,8 +11,9 @@ import { DefineWordInput } from "./components/DefineWordInput";
 type State = LyricCacheObj | { error: string } | false;
 
 // fetches the title (and then lyrics) from storage
-async function getData(): Promise<LyricCacheObj> {
-  const title = await getVideoContent();
+async function getData(curTitle: string | null): Promise<LyricCacheObj> {
+  const title = curTitle ?? (await getVideoContent());
+  console.log("title from getData: ", title);
   const titleKey = `title-${title}`;
   return new Promise((resolve, reject) =>
     chrome.storage.local.get([titleKey], (obj) => {
@@ -28,15 +29,13 @@ function isErrorState(s: State): s is { error: string } {
 
 export const Overlay: FC = () => {
   const [data, setData] = useState<State>(false);
-  // TODO: setTitle needs to be called from SongInput
   const [curTitle, setTitle] = useState<string | null>(null);
 
   // when the popup is opened, start the interval
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        // TODO: if curTitle is non-null, get the data based on curTitle instead (new helper function needed)
-        setData(await getData());
+        setData(await getData(curTitle));
       } catch (err) {
         // some kind of error getting the title or loading from storage
         setData({ error: err.toString() });
@@ -68,6 +67,7 @@ export const Overlay: FC = () => {
       lyrics={lyricsByLine}
       songTitle={data.songTitle}
       artist={data.artist}
+      geniusUrl={data.geniusUrl}
     >
       <DefineWordInput />
       <SongInput setTitle={setTitle} />
