@@ -13,7 +13,6 @@ type State = LyricCacheObj | { error: string } | false;
 // fetches the title (and then lyrics) from storage
 async function getData(curTitle: string | null): Promise<LyricCacheObj> {
   const title = curTitle ?? (await getVideoContent());
-  console.log("title from getData: ", title);
   const titleKey = `title-${title}`;
   return new Promise((resolve, reject) =>
     chrome.storage.local.get([titleKey], (obj) => {
@@ -44,13 +43,10 @@ export const Overlay: FC = () => {
     return () => clearInterval(interval);
   }, [curTitle]);
 
-  // case 1: the content script hasn't even set the state to loading yet
-  if (!data) return <Loading />;
+  // If the content script hasn't even set the state to loading yet or we are in loading state
+  if (!data || isLoading(data)) return <Loading />;
 
-  // case 2: it's in loading state
-  if (isLoading(data)) return <Loading />;
-
-  // case 3: there was some kind of error fetching the title or lyrics
+  // If there was some kind of error fetching the title or lyrics
   if (isErrorState(data))
     return (
       <Error>
@@ -59,7 +55,7 @@ export const Overlay: FC = () => {
       </Error>
     );
 
-  // case 4: all's good
+  // Split by \n
   const lyricsByLine = data.lyrics.split(/\n/);
 
   return (

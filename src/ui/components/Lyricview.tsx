@@ -24,14 +24,19 @@ export const LyricView: FC<LyricViewProps> = (props) => {
             <LineBreak key={idx} />
           )
         )}
-        <a href={geniusUrl} target="_blank">
+        <GeniusLink href={geniusUrl} target="_blank">
           Click for Genius page
-        </a>
+        </GeniusLink>
       </MainContainer>
       <LookupContainer>{children}</LookupContainer>
     </LyricContainer>
   );
 };
+
+const GeniusLink = styled.a`
+  font-size: 14px;
+  color: black;
+`;
 
 const LyricContainer = styled.div`
   display: flex;

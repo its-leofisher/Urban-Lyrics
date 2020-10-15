@@ -61,8 +61,7 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
         request.abort();
         return;
       }
-      // mywebsite.com/page?q=google.com => mywebsite.com
-      // mywebsite.com/page# => mywebsite.com
+      // mywebsite.com/page?q=google.com => mywebsite.com/page and mywebsite.com/page# => mywebsite.com/page
       const requestUrl: string = (request as any)._url
         .split("?")[0]
         .split("#")[0];
@@ -78,9 +77,8 @@ async function scrapeLyrics(title: string): Promise<LyricResult> {
     });
 
     // %20 = space, %26 = &
-    const googleSearchURL = encodeURI(
-      `https://google.com/search?hl=en&q=${title} lyrics site:genius.com`
-    ).replace(/%20&%20/, "%20%26%20");
+    const searchTerm = encodeURIComponent(`${title} lyrics site:genius.com`);
+    const googleSearchURL = `https://google.com/search?hl=en&q=${searchTerm}`;
 
     //hl = host language
     await page.goto(googleSearchURL);
