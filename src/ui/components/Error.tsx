@@ -7,7 +7,7 @@ import { LookupContainer } from "./LyricView";
 export const Error: FC = ({ children }) => {
   return (
     <GeneralContainer>
-      <BigText>No song title found on this page.</BigText>
+      <BigText>Oops! Something went wrong.</BigText>
       <EmojiText>😕</EmojiText>
       <LookupContainer>{children}</LookupContainer>
     </GeneralContainer>

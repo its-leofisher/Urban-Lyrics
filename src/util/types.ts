@@ -11,7 +11,3 @@ export type LoadingState = {
 };
 
 export type LyricCacheObj = LoadingState | LyricResult;
-
-export function isLoading(obj: object): obj is LoadingState {
-  return (obj as LoadingState).loading;
-}

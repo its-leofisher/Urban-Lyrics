@@ -30,7 +30,7 @@ async function run() {
   } catch (err) {
     // in case there was an error fetching lyrics
     chrome.storage.local.set({
-      [titleKey]: { error: err.toString(), lastUpdated: new Date().getTime() },
+      [titleKey]: { error: err.toString(), lastUpdated: new Date().getTime() }, // change this? Right now it always errors if it errored before
     });
   }
 }

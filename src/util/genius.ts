@@ -16,7 +16,7 @@ export async function fetchLyrics(title: string): Promise<LyricResult> {
     return data;
   } catch (err) {
     console.error(`Error fetching lyrics: ${err?.response?.data?.error}`);
-    throw err;
+    throw err; // mb don't throw
   }
 }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FC, useState, useEffect } from "react";
-import { LyricCacheObj, isLoading, LoadingState } from "../util/types";
+import { LyricCacheObj, LoadingState } from "../util/types";
 import { getVideoContent } from "../util/youtube";
 import { Error } from "./components/Error";
 import { Loading } from "./components/Loading";
@@ -20,6 +20,10 @@ async function getData(curTitle: string | null): Promise<LyricCacheObj> {
       else reject("data not found in storage");
     })
   );
+}
+
+function isLoading(obj: object): obj is LoadingState {
+  return (obj as LoadingState).loading;
 }
 
 function isErrorState(s: State): s is { error: string } {
@@ -44,7 +48,13 @@ export const Overlay: FC = () => {
   }, [curTitle]);
 
   // If the content script hasn't even set the state to loading yet or we are in loading state
-  if (!data || isLoading(data)) return <Loading />;
+  if (!data || isLoading(data))
+    return (
+      <Loading>
+        <DefineWordInput />
+        <SongInput setTitle={setTitle} />
+      </Loading>
+    );
 
   // If there was some kind of error fetching the title or lyrics
   if (isErrorState(data))

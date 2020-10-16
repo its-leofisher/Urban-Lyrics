@@ -1,5 +1,6 @@
 import { $x } from "./xpath";
 
+// Get rid of text after and including character with charCode > 127
 function cleanString(input: string): string {
   let output = "";
   for (var i = 0; i < input.length; ++i) {
@@ -16,11 +17,12 @@ function getVideoTitle() {
   const res = $x(
     '//*[@id="container"]/h1/yt-formatted-string/text()',
     document
-  )[0].nodeValue;
+  )[0].nodeValue; //wait?
 
   if (!res) throw Error("no video title found!");
 
-  return cleanString(res);
+  // Replace and clean the string
+  return cleanString(res.replace(/\(Official ((video)|(audio))\)/gi, ""));
 }
 
 // gets called from popup script; popup script doesn't have access to the title
