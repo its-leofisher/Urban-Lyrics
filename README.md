@@ -6,6 +6,8 @@
  - Frontend: Typescript, React, Styled Components, Chrome API, Webpack
  - Backend: Node JS, Express, Puppeteer, Heroku
  
+ Check it out on the Chrome web store [here](https://chrome.google.com/webstore/detail/urban-lyrics/akahkofaophahlgdibcfelkfnamedong?hl=en)
+ 
  ![Urban Lyrics](urbanlyrics_screenshot1.png)
  
  Special thanks to [David Mcnamee](https://github.com/davidmcnamee) who helped me get started on this project!
