@@ -8,4 +8,4 @@
  
  ![Urban Lyrics](urbanlyrics_screenshot1.png)
  
- Collaborated with [David Mcnamee](https://github.com/davidmcnamee) to build this project!
+ Special thanks to [David Mcnamee](https://github.com/davidmcnamee) who helped me get started on this project!
