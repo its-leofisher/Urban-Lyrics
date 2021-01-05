@@ -17,12 +17,14 @@ function getVideoTitle() {
   const res = $x(
     '//*[@id="container"]/h1/yt-formatted-string/text()',
     document
-  )[0].nodeValue; //wait?
+  )[0].nodeValue;
 
   if (!res) throw Error("no video title found!");
 
   // Replace and clean the string
-  return cleanString(res.replace(/\(Official ((video)|(audio))\)/gi, ""));
+  return cleanString(
+    res.replace(/\(Official ((lyric )|(music ))?((video)|(audio))\)/gi, "")
+  );
 }
 
 // gets called from popup script; popup script doesn't have access to the title

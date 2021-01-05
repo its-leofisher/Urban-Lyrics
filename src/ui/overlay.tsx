@@ -34,7 +34,6 @@ export const Overlay: FC = () => {
   const [data, setData] = useState<State>(false);
   const [curTitle, setTitle] = useState<string | null>(null);
 
-  // when the popup is opened, start the interval
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
