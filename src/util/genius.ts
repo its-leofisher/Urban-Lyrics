@@ -1,22 +1,16 @@
 import axios from "axios";
 import { LyricResult } from "./types";
 
-// async/await -- waiter at multiple tables
-// multithreading -- multiple waiters
-
-// IO bound application -- read/write to files a lot (or do a lot of http requests)
-// CPU bound -- lots of computation
-// API status codes: https://developer.amazon.com/docs/amazon-drive/ad-restful-api-response-codes.html
-
-// async function = the function can have "await" in it
 export async function fetchLyrics(title: string): Promise<LyricResult> {
-  const url = `${process.env.BACKEND_URL}/scrape`;
   try {
-    const { data } = await axios.post(url, { title }); // http request
+    const { data } = await axios.post(`${process.env.BACKEND_URL}/songdata`, {
+      title,
+    });
+    console.log(data);
     return data;
   } catch (err) {
     console.error(`Error fetching lyrics: ${err?.response?.data?.error}`);
-    throw err; // mb don't throw
+    throw err; // maybe don't throw in the future
   }
 }
 

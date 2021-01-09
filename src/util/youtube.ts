@@ -22,9 +22,7 @@ function getVideoTitle() {
   if (!res) throw Error("no video title found!");
 
   // Replace and clean the string
-  return cleanString(
-    res.replace(/\(Official ((lyric )|(music ))?((video)|(audio))\)/gi, "")
-  );
+  return cleanString(res.replace(/[([].*[\])]/gi, ""));
 }
 
 // gets called from popup script; popup script doesn't have access to the title
