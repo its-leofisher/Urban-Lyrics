@@ -56,13 +56,7 @@ const LyricBar = styled.p`
   font-size: 0.6em;
 `;
 
-const LineBreak = styled.br`
-  margin: 0;
-  padding: 0;
-  padding-right: 0px;
-  font-size: 0.2em;
-  line-height: 0.3em;
-`;
+const LineBreak = styled.br``;
 
 const MainContainer = styled.div`
   overflow-y: auto;

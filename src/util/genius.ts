@@ -6,7 +6,6 @@ export async function fetchLyrics(title: string): Promise<LyricResult> {
     const { data } = await axios.post(`${process.env.BACKEND_URL}/songdata`, {
       title,
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(`Error fetching lyrics: ${err?.response?.data?.error}`);
@@ -15,7 +14,7 @@ export async function fetchLyrics(title: string): Promise<LyricResult> {
 }
 
 // this is run in the background script
-// it waits for a message from the content script or from the popup script
+// it waits for a message from the content script or from the popup
 // and then runs fetchLyrics FOR THEM
 export function subscribeToGeniusFetchLyrics() {
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -36,7 +35,7 @@ export function subscribeToGeniusFetchLyrics() {
   });
 }
 
-// this is run in the content script
+// this is called in the content script and popup
 export async function fetchLyricsBackground(
   title: string
 ): Promise<LyricResult> {

@@ -23,7 +23,7 @@ export const SongInput: FC<SongInputProps> = ({ setTitle }) => {
         resolve(obj?.[titleKey]);
       })
     );
-    if (curData) return; // if we already have data for this song then we don't need to make a request
+    if ((curData as any)?.lyrics) return; // check if we already have lyrics for this song
     await new Promise((resolve) =>
       chrome.storage.local.set(
         {
