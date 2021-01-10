@@ -1,6 +1,6 @@
 {
   "name": "Urban Lyrics",
-  "version": "2.1",
+  "version": "2.2",
   "manifest_version": 2,
   "description": "A Chrome extension to view lyrics.",
   "icons": {

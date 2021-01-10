@@ -2,10 +2,12 @@ import { $x } from "./xpath";
 
 // Get rid of text after and including character with charCode > 127
 function cleanString(input: string): string {
+  let fuzzyTitle = input.replace(/(Feat|Ft)[^)\]]*/gi, "");
+  fuzzyTitle = fuzzyTitle.replace(/[([].*[\])]/gi, "");
   let output = "";
-  for (var i = 0; i < input.length; ++i) {
-    if (input.charCodeAt(i) <= 127) {
-      output += input.charAt(i);
+  for (var i = 0; i < fuzzyTitle.length; ++i) {
+    if (fuzzyTitle.charCodeAt(i) <= 127) {
+      output += fuzzyTitle.charAt(i);
     } else {
       break;
     }
@@ -21,8 +23,7 @@ function getVideoTitle() {
 
   if (!res) throw Error("no video title found!");
 
-  // Replace and clean the string
-  return cleanString(res.replace(/[([].*[\])]/gi, ""));
+  return cleanString(res);
 }
 
 // gets called from popup script; popup script doesn't have access to the title
@@ -61,7 +62,6 @@ export async function waitForVideo() {
   const maxTries = 16;
   return new Promise<string>((resolve, reject) => {
     let count = 0;
-    // setInterval(cb, x) runs cb every x milliseconds
     const interval = setInterval(() => {
       try {
         const title = getVideoTitle();
