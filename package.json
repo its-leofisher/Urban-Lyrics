@@ -1,11 +1,12 @@
 {
-  "name": "tsrwpcx",
+  "name": "urban-lyrics",
   "version": "1.0.0",
-  "description": "",
+  "description": "An extension that provides its user with lyrics to a song with the click of a button. It also has integrated search boxes for word definitions by Urban Dictionary and also for custom song lookups. At the end of the song lyrics is also a Genius link for the current song displayed.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack --progress --colors --watch --mode=development",
+    "prod": "webpack --progress --colors -p --config webpack.config.js --mode=production"
   },
   "keywords": [],
   "author": "",
